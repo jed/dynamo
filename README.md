@@ -3,7 +3,7 @@ dynamo
 
 [![Build Status](https://secure.travis-ci.org/jed/dynamo.png)][travis]
 
-This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by [Amazon Web Services][aws]. It currently supports the entire DynamoDB API in a unsugared (read: Amazon-flavored (read: ugly)) format. I'll be adding a more comfortable API over the coming week to map DynamoDB operations to a more node-friendly API, so stay tuned.
+This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by [Amazon Web Services][aws]. It currently supports the entire DynamoDB API in an unsugared (read: Amazon-flavored (read: ugly)) format. I'll be adding a more comfortable API over the coming week to make DynamoDB operations more node-ish, so stay tuned.
 
 Goals
 -----
