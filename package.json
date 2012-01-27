@@ -1,0 +1,25 @@
+{
+  "author": "Jed Schmidt <tr@nslator.jp> (http://jed.is)",
+  "name": "dynamo",
+  "description": "DynamoDB client for node.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jed/dynamo",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jed/dynamo.git"
+  },
+  "main": "./lib",
+  "scripts": {
+    "test": "mocha"
+  },
+  "engines": {
+    "node": "~0.6.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "config": {
+    "credentials": "dynamo-credentials.herokuapp.com"
+  }
+}
