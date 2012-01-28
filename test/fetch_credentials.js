@@ -6,6 +6,10 @@ var https = require("https")
 module.exports = function(cb) {
   var json = ""
 
+  console.log(process.env)
+
+  throw new Error
+
   if (process.env.TRAVIS) {
     https.get({host: credentialHost}, function(res) {
       res.on("data", function(chunk){ json += chunk })

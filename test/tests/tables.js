@@ -1,6 +1,6 @@
 var should = require("should")
   , dynamo = require("../../")
-  , fetch = require(__dirname + "/../fetch_credentials")
+  , fetch = require("../fetch_credentials")
   , db
 
 describe("Tables", function() {
