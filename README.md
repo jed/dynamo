@@ -7,7 +7,7 @@ This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by
 
 Goals
 -----
-- Use [travis-ci][travis]'s continuous integration testing for reliability
+- Use [Travis CI][travis]'s continuous integration testing for reliability
 - Abstract DynamoDB's implementation, but not its tradeoffs/philosophy
 - Be to DynamoDB what [@mranney][mranney]'s excellent [node_redis][node_redis] is to Redis
 
