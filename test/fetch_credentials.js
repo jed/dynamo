@@ -12,8 +12,10 @@ module.exports = function(cb) {
       res.on("data", function(chunk){ json += chunk })
       res.on("end", function() {
 
-        fs.writeFile(path, json)
-        cb(null, require(path))
+        fs.writeFile(path, json, function(err) {
+          if (err) cb(err)
+          else cb(null, require(path))        
+        })
       })
     }).on("error", cb)    
   }
