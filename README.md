@@ -40,6 +40,48 @@ db.tables.forEach(function(err, name, next) {
 })
 ```
 
+Low-level API
+-------------
+
+If you'd like more control over how you interact with DynamoDB, all [12 original DynamoDB operations][api] are available as camelCased methods on database instances return by `dynamo.createClient()`. These methods are used by the higher-level APIs, and require the object format expected by Amazon.
+
+- batchGetItem
+- createTable
+- deleteItem
+- deleteTable
+- describeTable
+- getItem
+- listTables
+- putItem
+- query
+- scan
+- updateItem
+- updateTable
+
+These allow you to skip dynamo's API sugar and use only its account, session, and authentication logic, for code such as the following:
+
+```javascript
+var dynamo = require("dynamo")
+  , db = dynamo.createClient()
+  , cb = console.log.bind(console)
+
+db.createTable({
+  TableName: "DYNAMO_TEST_TABLE_1",
+
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 5,
+    WriteCapacityUnits: 5
+  },
+
+  KeySchema: {
+    HashKeyElement: {
+      AttributeName: "hash",
+      AttributeType: "S"
+    }
+  }
+}, cb)
+```
+
 Testing
 -------
 
