@@ -18,7 +18,9 @@
   ],
   "main": "./lib",
   "scripts": {
-    "test": "mocha"
+    "pretest": "node ./test/setup.js",
+    "test": "mocha ./test/tests/*",
+    "posttest": "node ./test/teardown.js"
   },
   "engines": {
     "node": "~0.6.x"
