@@ -5,33 +5,18 @@ var https = require("https")
 
 module.exports = function(cb) {
   var json = ""
+    , path = "./credentials.json"
 
   if (process.env.TRAVIS) {
-    console.log("fetching remote")
     https.get({host: credentialHost}, function(res) {
       res.on("data", function(chunk){ json += chunk })
-      res.on("end", parse)
+      res.on("end", function() {
+
+        fs.writeFile(path, json)
+        cb(null, require(path))
+      })
     }).on("error", cb)    
   }
 
-  else {
-    console.log("fetching locale")
-    fs.readFile(__dirname + "/credentials.json", "utf8", function(err, data) {
-      if (err) return cb(err)
-
-      json = data
-      parse()
-    })
-  }
-
-  function parse() {
-    var data
-
-    try { data = JSON.parse(json) }
-    catch (err) { return cb(err) }
-
-    data.accessKeyId && data.secretAccessKey
-      ? cb(null, data)
-      : cb(new Error("Invalid credentials."))
-  }
+  else cb(null, require(path))
 }
