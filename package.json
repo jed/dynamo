@@ -8,6 +8,12 @@
     "type": "git",
     "url": "git://github.com/jed/dynamo.git"
   },
+  "keywords": [
+    "amazon",
+    "aws",
+    "DynamoDB",
+    "dynamo"
+  ],
   "main": "./lib",
   "scripts": {
     "test": "mocha"
