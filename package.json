@@ -2,7 +2,7 @@
   "author": "Jed Schmidt <tr@nslator.jp> (http://jed.is)",
   "name": "dynamo",
   "description": "DynamoDB client for node.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/jed/dynamo",
   "repository": {
     "type": "git",
@@ -12,7 +12,9 @@
     "amazon",
     "aws",
     "DynamoDB",
-    "dynamo"
+    "dynamo",
+    "nosql",
+    "database"
   ],
   "main": "./lib",
   "scripts": {
@@ -26,6 +28,6 @@
     "should": "*"
   },
   "config": {
-    "credentials": "dynamo-credentials.herokuapp.com"
+    "credentialHost": "dynamo-credentials.herokuapp.com"
   }
 }

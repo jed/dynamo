@@ -1,41 +1,29 @@
 var http = require("http")
   , https = require("https")
+  , url = require("url")
+  , fs = require("fs")
   , should = require("should")
   , dynamo = require("../")
 
-  , credentials
+  , credentialHost = process.env.npm_package_config_credentialHost
   , db
   , account
   , session
 
 describe("Setup", function() {
   it("fetch AWS credentials", function(done) {
-    var options = {host: process.env.npm_package_config_credentials}
-      , body = ""
-      , req
-      , err
+    fetchCredentials(function(err, data) {
+      if (err) return done(err)
 
-    req = https.get(options, function(res) {        
-      res.on("data", function(chunk){ body += chunk })
-      res.on("end", function() {
-        try {
-          credentials = JSON.parse(body)
-          db = dynamo.createClient(credentials)
+      db = dynamo.createClient(data)
+      should.exist(db)
+      db.should.be.a("object")
 
-          should.exist(db)    
-          db.should.be.a("object")      
-        }
-        
-        catch (e) { err = e }
-
-        done(err)
-      })
+      done()
     })
-
-    req.on("error", done)
   })
 
-  // return "UNCOMMENT TO REFRESH TABLES"
+  // return "COMMENT TO SKIP TABLE REFRESH"
 
   it("delete any test tables (Database#deleteTable)", function(done) {
     var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
@@ -132,3 +120,26 @@ describe("Database", function() {
     })
   })
 })
+
+function fetchCredentials(cb) {
+  var json = ""
+
+  if (process.env.TRAVIS) {
+    https.get({host: credentialHost}, function(res) {
+      res.on("data", function(chunk){ json += chunk })
+      res.on("end", parse)
+    }).on("error", cb)    
+  }
+
+  else fs.readFile("./credentials.json", "utf8", function(err, data) {
+    if (err) return cb(err)
+
+    json = data
+    parse()
+  })
+
+  function parse() {
+    try { cb(null, JSON.parse(json)) }
+    catch (err) { cb(err) }
+  }
+}
