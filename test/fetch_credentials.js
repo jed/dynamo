@@ -5,16 +5,15 @@ var https = require("https")
 
 module.exports = function(cb) {
   var json = ""
-    , path = "./credentials.json"
+    , path = __dirname + "/credentials.json"
 
   if (process.env.TRAVIS) {
     https.get({host: credentialHost}, function(res) {
       res.on("data", function(chunk){ json += chunk })
       res.on("end", function() {
-
         fs.writeFile(path, json, function(err) {
           if (err) cb(err)
-          else cb(null, require(path))        
+          else cb(null, require(path))
         })
       })
     }).on("error", cb)    
