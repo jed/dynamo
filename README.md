@@ -43,7 +43,7 @@ db.tables.forEach(function(err, name, next) {
 Testing
 -------
 
-Continuous integration testing is handled by the excellent [Travis CI][travis]. Whenever a new commit lands in this repo, GitHub tells a custom [Heroku][heroku] app to serve my AWS credentials to Travis once when asked. This way, every commit is tested against a live DynamoDB instance without me having to publish my credentials on GitHub (if there's a better way to do this, I'd love to hear it).
+Continuous integration testing is handled through [@visionmedia][tj]'s [mocha][mocha]/[should.js][should] the excellent [Travis CI][travis]. Whenever a new commit lands in this repo, GitHub tells a custom [Heroku][heroku] app to serve my AWS credentials to Travis once when asked. This way, every commit is tested against a live DynamoDB instance without me having to publish my credentials on GitHub (if there's a better way to do this, I'd love to hear it).
 
 If you'd like to test against your own credentials, put them in a file called `./credentials.json`, in dynamo's root directory:
 
@@ -74,3 +74,6 @@ Send any questions or comments [here][twitter].
 [node_redis]: https://github.com/mranney/node_redis
 [twitter]: http://twitter.com/jedschmidt
 [heroku]: http://heroku.com
+[mocha]: https://visionmedia.github.com/mocha
+[should]: https://github.com/visionmedia/should.js
+[tj]: https://github.com/visionmedia
