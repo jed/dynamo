@@ -1,98 +1,81 @@
-var dynamo = require("../")
-  , fetch = require("./fetch_credentials")
-  , db
+var should = require("should")
+  , dynamo = require("../")
+  , db = dynamo.createClient({
+      accessKeyId: process.env.npm_package_config_accessKeyId,
+      secretAccessKey: process.env.npm_package_config_secretAccessKey
+    })
 
-function done(err) { if (err) throw err }
+describe("setup", function() {
+  it("delete any existing tables", function(done) {
+    var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
+      , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
 
-function deleteTestTables() {
-  console.log("deleting any existing tables...")
-
-  var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
-    , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
-
-  db.deleteTable(table1, function() {
-    db.deleteTable(table2, function() {
-      checkNoTablesExist()
+    db.deleteTable(table1, function() {
+      db.deleteTable(table2, function() {
+        done()
+      })
     })
   })
-}
 
-function checkNoTablesExist() {
-  console.log("making sure no tables exist...")
+  it("make sure no tables exist", function check1(done) {
+    var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
+      , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
 
-  var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
-    , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
+    db.describeTable(table1, function(err, data) {
+      if (!err) setTimeout(check1, 5000, done)
 
-  db.describeTable(table1, function(err, data) {
-    if (!err) setTimeout(checkNoTablesExist, 5000)
+      else !function check2() {
+        db.describeTable(table2, function(err, data) {
+          if (!err) setTimeout(check2, 5000, done)
 
-    else !function check2() {
-      db.describeTable(table2, function(err, data) {
-        if (!err) setTimeout(check2, 5000)
-
-        else recreateTestTables()
-      })
-    }()
+          else done()
+        })
+      }()
+    })
   })
-}
 
-function recreateTestTables() {
-  console.log("recreating test tables...")
-
-  var throughput = { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
-    , table1 = {
-        TableName: "DYNAMO_TEST_TABLE_1",
-        ProvisionedThroughput: throughput,
-        KeySchema: {
-          HashKeyElement: { AttributeName: "hash", AttributeType: "S" }
+  it("recreate test tables", function(done) {
+    var throughput = { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      , table1 = {
+          TableName: "DYNAMO_TEST_TABLE_1",
+          ProvisionedThroughput: throughput,
+          KeySchema: {
+            HashKeyElement: { AttributeName: "hash", AttributeType: "S" }
+          }
         }
-      }
 
-    , table2 = {
-        TableName: "DYNAMO_TEST_TABLE_2",
-        ProvisionedThroughput: throughput,
-        KeySchema: {
-          HashKeyElement: { AttributeName: "hash", AttributeType: "S" },
-          RangeKeyElement: { AttributeName: "range", AttributeType: "N" }
+      , table2 = {
+          TableName: "DYNAMO_TEST_TABLE_2",
+          ProvisionedThroughput: throughput,
+          KeySchema: {
+            HashKeyElement: { AttributeName: "hash", AttributeType: "S" },
+            RangeKeyElement: { AttributeName: "range", AttributeType: "N" }
+          }
         }
-      }
 
-  db.createTable(table1, function(err, data) {
-    err ? done(err) : db.createTable(table2, waitForActiveTables)
+    db.createTable(table1, function(err, data) {
+      err ? done(err) : db.createTable(table2, done)
+    })
   })
-}
 
-function waitForActiveTables() {
-  console.log("waiting for tables to activate...")
+  it("wait for tables to activate", function check1(done) {
+    var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
+      , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
 
-  var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
-    , table2 = {TableName: "DYNAMO_TEST_TABLE_2"}
+    db.describeTable(table1, function(err, data) {
+      if (err) done(err)
 
-  db.describeTable(table1, function(err, data) {
-    if (err) done(err)
+      else if (data.Table.TableStatus != "ACTIVE") setTimeout(check1, 5000, done)
 
-    else if (data.Table.TableStatus != "ACTIVE") setTimeout(waitForActiveTables, 5000)
+      else !function check2() {
+        db.describeTable(table2, function(err, data) {
+          if (err) done(err)
 
-    else !function check2() {
-      db.describeTable(table2, function(err, data) {
-        if (err) done(err)
+          else if (data.Table.TableStatus != "ACTIVE") setTimeout(check2, 5000, done)
 
-        else if (data.Table.TableStatus != "ACTIVE") setTimeout(check2, 5000)
-
-        else {
-          console.log("done.")
-          process.exit(0)
-        }
-      })
-    }()
+          else done()
+        })
+      }()
+    })    
   })
-}
-
-console.log("fetching credentials...")
-fetch(function(err, data) {
-  if (err) done(err)
-
-  db = dynamo.createClient(data)
-
-  deleteTestTables()
 })

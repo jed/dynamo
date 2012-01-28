@@ -58,7 +58,7 @@ If you'd like more control over how you interact with DynamoDB, all [12 original
 - `updateItem`
 - `updateTable`
 
-These allow you to skip dynamo's API sugar and use only its account, session, and authentication logic, for code such as the following:
+These allow you to skip dynamo's API sugar and use only its account, session, and authentication logic, for code such as the following for `createTable`:
 
 ```javascript
 var dynamo = require("dynamo")

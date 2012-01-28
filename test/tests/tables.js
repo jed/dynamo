@@ -1,24 +1,11 @@
 var should = require("should")
   , dynamo = require("../../")
-  , fetch = require("../fetch_credentials")
-  , db
+  , db = dynamo.createClient({
+      accessKeyId: process.env.npm_package_config_accessKeyId,
+      secretAccessKey: process.env.npm_package_config_secretAccessKey
+    })
 
 describe("Tables", function() {
-  before(function(done) {
-    fetch(function(err, data) {
-      if (err) done(err)
-
-      else {
-        db = dynamo.createClient(data)
-
-        should.exist(db)
-        db.should.be.a("object")
-
-        done()
-      }
-    })
-  })
-
   describe("#fetch(fn)", function() {
     it("should return an array of tables", function(done) {
       db.tables.fetch(function(err, data) {

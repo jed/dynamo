@@ -18,9 +18,9 @@
   ],
   "main": "./lib",
   "scripts": {
-    "pretest": "node ./test/setup.js",
+    "pretest": "mocha ./test/setup.js",
     "test": "mocha ./test/tests/*",
-    "posttest": "node ./test/teardown.js"
+    "posttest": "mocha ./test/teardown.js"
   },
   "engines": {
     "node": "~0.6.x"
@@ -30,6 +30,7 @@
     "should": "*"
   },
   "config": {
-    "credentialHost": "dynamo-credentials.herokuapp.com"
+    "accessKeyId": "AKIAJXHTJZLQCOPQERMQ",
+    "secretAccessKey": "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"
   }
 }
