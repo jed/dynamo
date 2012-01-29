@@ -85,18 +85,14 @@ db.createTable({
 Testing
 -------
 
-Continuous integration testing is handled through [@visionmedia][tj]'s [mocha][mocha]/[should.js][should] the excellent [Travis CI][travis]. Whenever a new commit lands in this repo, GitHub tells a custom [Heroku][heroku] app to serve my AWS credentials to Travis once when asked. This way, every commit is tested against a live DynamoDB instance without me having to publish my credentials on GitHub (if there's a better way to do this, I'd love to hear it).
+Continuous integration testing is handled through [@visionmedia][tj]'s [mocha][mocha]/[should.js][should], by the excellent [Travis CI][travis]. The tests are run against a real DynamoDB instance, using [IAM credentials][iam] limited to Travis CI (thanks to @Skomski for this tip).
 
-If you'd like to test against your own credentials, put them in a file called `./credentials.json`, in dynamo's root directory:
+If you'd like these tests on your own credentials, set them as follows:
 
-```json
-{
-  "accessKeyId": "MY_ACCESS_KEY_ID",
-  "secretAccessKey": "MY_SECRET_ACCESS_KEY"
-}
-```
+   npm config set dynamo:accessKeyId <your-access-key-id>
+   npm config set dynamo:secretAccessKey <your-secret-access-key>
 
-and then run
+and then run the tests:
 
     npm test
 
@@ -119,3 +115,4 @@ Send any questions or comments [here][twitter].
 [mocha]: https://visionmedia.github.com/mocha
 [should]: https://github.com/visionmedia/should.js
 [tj]: https://github.com/visionmedia
+[iam]: http://docs.amazonwebservices.com/IAM/latest/UserGuide/IAM_Introduction.html
