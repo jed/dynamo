@@ -84,22 +84,20 @@ db.createTable({
 Testing
 -------
 
-Continuous integration testing is handled by the excellent [Travis CI][travis]. The tests are run against a real DynamoDB instance, using credentials limited to Travis CI.
+Testing for dynamo is handled using continuous integration against a real DynamoDB instance, under credentials limited to Travis CI.
 
-If you'd like these tests on your own credentials, set them as follows:
-
-   npm config set dynamo:accessKeyId <your-access-key-id>
-   npm config set dynamo:secretAccessKey <your-secret-access-key>
-
-and then run the tests:
+If you'd like to run the test stuie with your own credentials, make sure they're set using the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables, and then run the tests:
 
     npm test
+
+The test suite creates two tables called `DYNAMO_TEST_TABLE_1` and `DYNAMO_TEST_TABLE_2` before the tests are run, and then deletes them once the tests are done. Note that you will need to delete them manually in the event that the tests fail.
 
 Credits
 -------
 
+- [Travis CI][travis] for an awesome open-source testing service
 - [@skomski][skomski] for turning me on to [IAM credentials][iam]
-- [@mranney][mranney] for inspiration from his awesome [node_redis][node_redis]
+- [@mranney][mranney] for inspiration from the venerable [node_redis][node_redis]
 - [@visionmedia][tj] for making testing easy with [mocha][mocha] and [should.js][should]
 
 Copyright
