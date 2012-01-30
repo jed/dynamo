@@ -84,7 +84,7 @@ If neither of the above are provided, an error will be thrown.
 
 #### db\[_operationName_\](data, cb)
 
-All of the original DynamoDB operations are provided as methods on database instances. You won't need to use them unless you want to sacrifice a clean interdace for more control, and don't mind learning their JSON format.
+All of the original DynamoDB operations are provided as methods on database instances. You won't need to use them unless you want to sacrifice a clean interdace for more control, and don't mind learning Amazon's JSON format.
 
 ### TableList
 
@@ -101,7 +101,7 @@ Calls back with the tables in the current database, as a list of table instances
 
 A convenience method that uses the `fetch` method to call back for each table fetched. This abstracts away batching, making it much easier to iterate over tables in a natural yet non-blocking way.
 
-<!-- #### tables.add(_name_, _args..._)
+#### tables.add(_name_, _args..._)
 
 An alias for `tables.get(name).create(args...)`.
 
@@ -112,9 +112,51 @@ An alias for `tables.get(name).destroy(args...)`.
 ### Table
 
 #### table = tables.get(_tableName_)
- -->
 
-### Table, Item, ItemList, etc.
+Returns a table instance for the given name. Note that this only represents the logic for the table, and does not fetch any information.
+
+#### table.create([_schema_], [_throughput_], [_cb_])
+
+Creates a table with the optionally specified schema and throughput.
+
+The schema is specified as an object with a `hash` key and an optional `range` key, each with a `name` property and an optional `type` property that defaults to `"String"`. If no schema is specified, `{hash: {name: "id", type: "String }}` is used.
+
+The throughput is specified as an object with a `read` property and a `write` property, both defaulting to the minimum possible throughput (5 units).
+
+This means that the following are identical:
+
+```javascript
+table.create()
+table.create("id")
+table.create({id: "String"})
+table.create({id: "String"}, {read: 5, write: 5})
+```
+
+This method returns the table description.
+
+#### table.fetch([_cb_])
+
+Fetches details about the table, which can include its status, size, schema, and other details, such as the following:
+
+```javascript
+{
+  name: 'DYNAMO_TEST_TABLE_3',
+  createdAt: Mon, 30 Jan 2012 15:47:02 GMT,
+  status: 'CREATING',
+  schema: { hash: { name: 'id', type: 'String' } },
+  throughput: { read: 5, write: 5 }
+}
+```
+
+#### table.destroy([_cb_])
+
+Deletes the table.
+
+#### table.watch([_cb_])
+
+Polls every 5 seconds until the status of the table changes.
+
+### Item, ItemList, etc.
 
 Coming this week! 
 
