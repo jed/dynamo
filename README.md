@@ -177,6 +177,7 @@ Credits
 -------
 
 - [Travis CI][travis] for an awesome open-source testing service
+- [@chriso][chriso] for letting me have the "dynamo" name on npm
 - [@skomski][skomski] for turning me on to [IAM credentials][iam]
 - [@mranney][mranney] for inspiration from the venerable [node_redis][node_redis]
 - [@visionmedia][tj] for making testing easy with [mocha][mocha] and [should.js][should]
@@ -204,3 +205,4 @@ Send any questions or comments [here][twitter].
 [tj]: https://github.com/visionmedia
 [iam]: http://docs.amazonwebservices.com/IAM/latest/UserGuide/IAM_Introduction.html
 [connect]: http://www.senchalabs.org/connect
+[chriso]: https://github.com/chriso
