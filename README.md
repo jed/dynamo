@@ -16,24 +16,12 @@ Example
 ```javascript
 var dynamo = require("dynamo")
   , db = dynamo.createClient()
+  , tables = []
 
-// the current API is unsugared, mirrors the DynamoDB API...
-db.listTables({}, function(err, data) {
-  if (err) return console.warn(err)
-
-  var name, names = data.TableNames
-
-  while (name = names.shift()) {
-  	console.log("table: " + name)
-  }
-})
-
-// but an additional, more node-friendly API is in the works.
-// this is a theoretical example of what i have in mind:
 db.tables.forEach(function(err, name, next) {
   if (err) return console.warn(err)
 
-  console.log("table: " + name)
+  console.log("found a table: " + table.name)
 
   if (next) next() // use connect-style continuations for batching
 })
