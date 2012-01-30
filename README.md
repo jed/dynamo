@@ -96,6 +96,13 @@ and then run the tests:
 
     npm test
 
+Credits
+-------
+
+- [@skomski][skomski] for turning me on to [IAM credentials][iam]
+- [@mranney][mranney] for inspiration from his awesome [node_redis][node_redis]
+- [@visionmedia][tj] for making testing easy with [mocha][mocha] and [should.js][should]
+
 Copyright
 ---------
 
@@ -109,6 +116,7 @@ Send any questions or comments [here][twitter].
 [aws]: http://aws.amazon.com
 [api]: http://docs.amazonwebservices.com/amazondynamodb/latest/developerguide/operationlist.html
 [mranney]: https://github.com/mranney
+[skomski]: https://github.com/skomski
 [node_redis]: https://github.com/mranney/node_redis
 [twitter]: http://twitter.com/jedschmidt
 [heroku]: http://heroku.com
