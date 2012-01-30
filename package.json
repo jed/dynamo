@@ -2,7 +2,7 @@
   "author": "Jed Schmidt <tr@nslator.jp> (http://jed.is)",
   "name": "dynamo",
   "description": "DynamoDB client for node.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/jed/dynamo",
   "repository": {
     "type": "git",
@@ -28,5 +28,7 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*"
-  }
+  },
+  "dependencies": {},
+  "optionalDependencies": {}
 }
