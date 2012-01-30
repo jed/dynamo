@@ -1,39 +1,40 @@
 var should = require("should")
   , dynamo = require("../../")
-  , db = dynamo.createClient({
-      accessKeyId: process.env.npm_package_config_accessKeyId,
-      secretAccessKey: process.env.npm_package_config_secretAccessKey
-    })
+  , db = dynamo.createClient()
+  , tables = db.tables
 
-describe("Tables", function() {
-  describe("#fetch(fn)", function() {
-    it("should return an array of tables", function(done) {
-      db.tables.fetch(function(err, data) {
-        should.not.exist(err)
-        should.exist(data)
+describe("TableList", function() {
+  describe("#get()", function() {
+    it("should return a table", function() {
+      var table = tables.get("TEST_NAME")
 
-        data.should.have.property("length")
-        data.length.should.be.above(1)
-
-        data.should.have.property(0)
-        data[0].should.have.property("database")
-
-        done()        
-      })
+      should.exist(table)
+      table.should.have.property("name", "TEST_NAME")
     })
   })
 
-  describe("#fetch(num, fn)", function() {
-    it("should return one table and have next fn", function(done) {
-      var i = 0
-
-      db.tables.fetch(1, function(err, data, next) {
+  describe("#fetch()", function() {
+    it("should return a list of tables", function(done) {
+      tables.fetch(function(err, tables) {
         should.not.exist(err)
-        should.exist(data)
+        should.exist(tables)
+        tables.should.have.property("length")
+        tables.length.should.be.above(1)
 
-        data.should.have.length(1)
+        done()
+      })
+    })
 
-        if (i++) {
+    it("should support continuations", function(done) {
+      var first = true
+
+      tables.fetch(1, function(err, tables, next) {
+        should.not.exist(err)
+        should.exist(tables)
+        tables.should.have.property("length", 1)
+
+        if (first) {
+          first = false
           should.exist(next)
           next()
         }
@@ -43,17 +44,23 @@ describe("Tables", function() {
     })
   })
 
-  describe("#fetch(str, fn)", function() {
-    it("should return the second test table", function(done) {
-      var str = "DYNAMO_TEST_TABLE_1"
-      db.tables.fetch(str, function(err, data) {
+  describe("#forEach()", function() {
+    it("should callback with a table and continuation", function(done) {
+      tables.forEach(function(err, table, next) {
         should.not.exist(err)
-        should.exist(data)
+        should.exist(table)
+        should.exist(next)
 
-        data.should.have.property(0)
-        data[0].should.have.property("name", "DYNAMO_TEST_TABLE_2")
+        table.should.have.property("name")
+        next.should.be.a("function")
 
         done()
+      })
+    })
+
+    it("should callback with continuation until end", function(done) {
+      tables.forEach(function(err, table, next) {
+        (next || done)()
       })
     })
   })
