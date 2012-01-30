@@ -1,9 +1,6 @@
 var should = require("should")
   , dynamo = require("../")
-  , db = dynamo.createClient({
-      accessKeyId: process.env.npm_package_config_accessKeyId,
-      secretAccessKey: process.env.npm_package_config_secretAccessKey
-    })
+  , db = dynamo.createClient()
 
 describe("teardown", function() {
   it("delete any existing tables", function(done) {
