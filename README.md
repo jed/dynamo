@@ -26,7 +26,7 @@ db.tables.forEach(function(err, name, next) {
   if (next) next() // use connect-style continuations for batching
 })
 ```
-
+<a name="callbacks"></a>
 Callbacks
 ---------
 
@@ -57,7 +57,7 @@ db.tables.fetch(function(err, data, next) {
   }
 })
 ```
-
+<a name="api"></a>
 API
 ---
 
@@ -114,6 +114,11 @@ An alias for `tables.get(name).destroy(args...)`.
 #### table = tables.get(_tableName_)
  -->
 
+### Table, Item, ItemList, etc.
+
+Coming this week! 
+
+<a name="lowlevelapi"></a>
 Low-level API
 -------------
 
@@ -155,7 +160,7 @@ db.createTable({
   }
 }, cb)
 ```
-
+<a name="testing"></a>
 Testing
 -------
 
@@ -167,6 +172,7 @@ If you'd like to run the test stuie with your own credentials, make sure they're
 
 The test suite creates two tables called `DYNAMO_TEST_TABLE_1` and `DYNAMO_TEST_TABLE_2` before the tests are run, and then deletes them once the tests are done. Note that you will need to delete them manually in the event that the tests fail.
 
+<a name="credits"></a>
 Credits
 -------
 
@@ -175,6 +181,7 @@ Credits
 - [@mranney][mranney] for inspiration from the venerable [node_redis][node_redis]
 - [@visionmedia][tj] for making testing easy with [mocha][mocha] and [should.js][should]
 
+<a name="copyright"></a>
 Copyright
 ---------
 
