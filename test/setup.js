@@ -2,6 +2,8 @@ var should = require("should")
   , dynamo = require("../")
   , db = dynamo.createClient()
 
+console.log(process.env)
+
 describe("setup", function() {
   it("delete any existing tables", function(done) {
     var table1 = {TableName: "DYNAMO_TEST_TABLE_1"}
