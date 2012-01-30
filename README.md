@@ -9,7 +9,6 @@ Goals
 -----
 - Use [Travis CI][travis]'s continuous integration testing for reliability
 - Abstract DynamoDB's implementation, but not its tradeoffs/philosophy
-- Be to DynamoDB what [@mranney][mranney]'s excellent [node_redis][node_redis] is to Redis
 
 Example
 -------
@@ -85,7 +84,7 @@ db.createTable({
 Testing
 -------
 
-Continuous integration testing is handled through [@visionmedia][tj]'s [mocha][mocha]/[should.js][should], by the excellent [Travis CI][travis]. The tests are run against a real DynamoDB instance, using [IAM credentials][iam] limited to Travis CI (thanks to @Skomski for this tip).
+Continuous integration testing is handled by the excellent [Travis CI][travis]. The tests are run against a real DynamoDB instance, using credentials limited to Travis CI.
 
 If you'd like these tests on your own credentials, set them as follows:
 
