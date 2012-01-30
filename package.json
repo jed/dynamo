@@ -28,12 +28,5 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*"
-  },
-  "config": {
-    "NOTE": "These are limited credentials usable only from Travis CI",
-    "accessKeyId": "AKIAJXHTJZLQCOPQERMQ",
-    "secretAccessKey": "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"
-  },
-  "dependencies": {},
-  "optionalDependencies": {}
+  }
 }
