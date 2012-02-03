@@ -101,50 +101,59 @@ Calls back with the tables in the current database, as a list of table instances
 
 A convenience method that uses the `fetch` method to call back for each table fetched. This abstracts away batching, making it much easier to iterate over tables in a natural yet non-blocking way.
 
-#### tables.add(_name_, _args..._)
-
-An alias for `tables.get(name).create(args...)`.
-
-#### tables.remove(_name_, _args..._)
-
-An alias for `tables.get(name).destroy(args...)`.
-
 ### Table
 
-#### table = tables.get(_tableName_)
+#### table = new db.Table([options])
 
-Returns a table instance for the given name. Note that this only represents the logic for the table, and does not fetch any information.
-
-#### table.create([_schema_], [_throughput_], [_cb_])
-
-Creates a table with the optionally specified schema and throughput.
-
-The schema is specified as an object with a `hash` key and an optional `range` key, each with a `name` property and an optional `type` property that defaults to `"String"`. If no schema is specified, `{hash: {name: "id", type: "String }}` is used.
-
-The throughput is specified as an object with a `read` property and a `write` property, both defaulting to the minimum possible throughput (5 units).
-
-This means that the following are identical:
+Returns a table instance.
 
 ```javascript
-table.create()
-table.create("id")
-table.create({id: "String"})
-table.create({id: "String"}, {read: 5, write: 5})
+recipeTable = new db.Table({
+  name: "recipes",
+  schema: {userId: Number, date: String},
+  throughput: {read: 10, write: 10}
+})
 ```
 
-This method returns the table description.
+_options_ can be an object with the following properties:
+
+- `name`: The name of the table (required)
+
+- `schema`: The schema of the table (optional), which can be specified as an object, and needs to have either one or two keys. The first key is required and used as the hash key, and the second is option and used as the range key. The values of these keys can be the global `String` and `Number` constructors (or the strings "S" or "N"). All of the following are valid:
+
+```javascript
+{myHashKey: Number}
+{myHashKey: "N"}
+{myHashKey: Number, myRangeKey: String}
+{myHashKey: "N", myRangeKey: "S"}
+```
+
+- `throughput`: The throughput of the table (optional), with `read` and `write` keys.
+
+#### table.create([_cb_])
+
+Creates a table with the schema and throughput as specified in when the table was instantiated. A schema is required for table creation, but the throughput is optional and defaults to the DynamoDB minimums: 3 `ReadCapacityUnits` and 5 `WriteCapacityUnits`.
 
 #### table.fetch([_cb_])
 
-Fetches details about the table, which can include its status, size, schema, and other details, such as the following:
+Fetches details about the table, which can include its status, size, schema, and other details, such as the following. The value returned is a table instance, with properties such as the following:
 
 ```javascript
-{
-  name: 'DYNAMO_TEST_TABLE_3',
-  createdAt: Mon, 30 Jan 2012 15:47:02 GMT,
-  status: 'CREATING',
-  schema: { hash: { name: 'id', type: 'String' } },
-  throughput: { read: 5, write: 5 }
+{ 
+  CreationDateTime: Fri, 03 Feb 2012 08:09:12 GMT,
+  ItemCount: 0,
+  KeySchema: {
+    HashKeyElement: { AttributeName: 'user', AttributeType: 'S' },
+    RangeKeyElement: { AttributeName: 'date', AttributeType: 'N' }
+  },
+  ProvisionedThroughput: {
+    LastIncreaseDateTime: Fri, 03 Feb 2012 08:09:12 GMT,
+    ReadCapacityUnits: 3,
+    WriteCapacityUnits: 5
+  },
+  TableName: 'myTable',
+  TableSizeBytes: 0,
+  TableStatus: 'UPDATING'
 }
 ```
 
