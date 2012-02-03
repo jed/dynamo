@@ -93,7 +93,6 @@ All of the original DynamoDB operations are provided as methods on database inst
 Each client includes a table list object used to interact with DynamoDB tables.
 
 #### tables.fetch([_cb_])
-#### tables.fetch(_limit_, [_cb_])
 
 Calls back with the tables in the current database, as a list of table instances. This is subject to pagination depending on the number of results, and the number of items in each batch fetched can be specified with an optional leading _limit_ integer.
 
