@@ -4,15 +4,6 @@ var should = require("should")
   , tables = db.tables
 
 describe("TableList", function() {
-  describe("#get()", function() {
-    it("should return a table", function() {
-      var table = tables.get("TEST_NAME")
-
-      should.exist(table)
-      table.should.have.property("name", "TEST_NAME")
-    })
-  })
-
   describe("#fetch()", function() {
     it("should return a list of tables", function(done) {
       tables.fetch(function(err, tables) {
@@ -28,7 +19,9 @@ describe("TableList", function() {
     it("should support continuations", function(done) {
       var first = true
 
-      tables.fetch(1, function(err, tables, next) {
+      tables.Limit = 1
+
+      tables.fetch(function(err, tables, next) {
         should.not.exist(err)
         should.exist(tables)
         tables.should.have.property("length", 1)
@@ -51,7 +44,7 @@ describe("TableList", function() {
         should.exist(table)
         should.exist(next)
 
-        table.should.have.property("name")
+        table.should.have.property("TableName")
         next.should.be.a("function")
 
         done()
