@@ -18,7 +18,7 @@ var dynamo = require("dynamo")
   , db = dynamo.createClient()
   , tables = []
 
-db.tables.forEach(function(err, name, next) {
+db.tables.forEach(function(err, table, next) {
   if (err) return console.warn(err)
 
   console.log("found a table: " + table.name)
