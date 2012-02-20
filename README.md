@@ -21,7 +21,7 @@ var dynamo = require("dynamo")
 db.tables.forEach(function(err, table, next) {
   if (err) return console.warn(err)
 
-  console.log("found a table: " + table.name)
+  console.log("found a table: " + table.TableName)
 
   if (next) next() // use connect-style continuations for batching
 })
