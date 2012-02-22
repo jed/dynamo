@@ -3,71 +3,52 @@ dynamo
 
 [![Build Status](https://secure.travis-ci.org/jed/dynamo.png)][travis]
 
-This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by [Amazon Web Services][aws]. It currently supports the entire DynamoDB API in an unsugared (read: Amazon-flavored (read: ugly)) format. I'll be developing a more comfortable API over the coming week to make DynamoDB operations more node-ish, so stay tuned.
+This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by [Amazon Web Services][aws]. It aims to abstract DynamoDB's implementation (request signing, session tokens, pagination), but not its tradeoffs/philosophy, by providing two APIs:
 
-Goal
-----
-
-Abstract DynamoDB's implementation (request signing, session tokens, pagination), but not its tradeoffs/philosophy.
+- a [low-level-but-ugly API][low-api] that supports all 12 DynamoDB operations as-is, and
+- a [high-level API][high-api] that uses the above to provide a more natural interface.
 
 Example
 -------
 
 ```javascript
-var dynamo = require("dynamo")
-  , db = dynamo.createClient()
-  , tables = []
+// High-level API
 
-db.tables.forEach(function(err, table, next) {
-  if (err) return console.warn(err)
+db.get("myTable")
+  .query({id: "123", date: {">=", new Date - 6000 }})
+  .get(["id", "date", "name"])
+  .reverse()
+  .fetch(function(err, data){ ... })
 
-  console.log("found a table: " + table.TableName)
+// Same call, using low-level API
 
-  if (next) next() // use connect-style continuations for batching
-})
+db.query({
+  TableName: "myTable",
+  HashKeyValue: {S:"123"},
+  RangeKeyValue: {
+    ComparisonOperator: "LE",
+    AttributeValueList: [{"N":"1329912311806"}]
+  },
+  AttributesToGet: ["id", "date", "name"],
+  ScanIndexForward: false
+}, function(err, data){ ... })
 ```
-<a name="callbacks"></a>
-Callbacks
----------
 
-- All callbacks are optional, and if omitted will use `console.warn` for errors and `console.log` otherwise. This makes it easier to inspect your database in a REPL, for example.
+Installation
+------------
 
-- The signature for all callbacks is `(err, data, next)`. This is the same as the standard for most node.js programs, but with an additional `next` parameter: a continuation function such as those used in [Connect][connect] routes and other middleware. This function takes no arguments, and is passed only in the following cases:
+This library has no dependencies, and can be installed from [npm][npm]:
 
-  - The call was unsuccessful and can be retried. This is the case when DynamoDB returns a 5xx status code, indicating that the problem exists with the service, not the request. Calling `next()` will execute the same request again, so it's best used with `setTimeout`.
-  - The call was successful and has subsequent results, such as for pagination or when a response hits the 1MB limit. Calling `next()` will fetch the next batch of results and call back again.
+    npm install dynamo
 
-This allows you to write code like this, which logs a list of all tables:
-
-```javascript
-db = dynamo.createClient()
-tables = []
-
-db.tables.fetch(function(err, data, next) {
-  if (err) {
-    if (!next) throw err        // give up (for 4xx errors)
-    else setTimeout(next, 5000) // try again in 5s (for 5xx errors)
-  }
-
-  else {
-    tables.push.apply(tables, data)
-
-    if (!next) console.log(tables) // log it, we've hit the end
-    else next()                    // fetch the next batch and call again
-  }
-})
-```
-<a name="api"></a>
 API
 ---
 
-#### dynamo = require("dynamo")
+### dynamo = require("dynamo")
 
-This module exposes the `createClient` method, which is the preferred way to interact with dynamo. It also provides the core constructors it uses (such as `Account`, `Database`, `Session`, and `Table`), so that you can override any defaults stored as prototype properties as necessary.
+This module exposes the `createClient` method, which is the preferred way to interact with dynamo.
 
-### Database
-
-#### db = dynamo.createClient([_credentials_])
+### db = dynamo.createClient([_credentials_])
 
 Returns a database instance attached to the account specified by the given credentials. The credentials can be specified as an object with `accessKeyId` and `secretAccessKey` members such as the following:
 
@@ -82,135 +63,20 @@ You can also omit these credentials by storing them in the environment under whi
 
 If neither of the above are provided, an error will be thrown.
 
-#### db\[_operationName_\](data, cb)
+Once you have a database instance, you can use either of the provided APIs:
 
-All of the original DynamoDB operations are provided as methods on database instances. You won't need to use them unless you want to sacrifice a clean interdace for more control, and don't mind learning Amazon's JSON format.
+### High-level API (blue pill)
 
-### TableList
+The primary purpose of this library is to abstract away the often bizzare API design decisions of DynamoDB, into a composable and intuitive interface based on Database, Table, Item, Batch, Query, and Scan objects.
 
-#### tables = db.tables
+See [the wiki][high-api] for more information.
 
-Each client includes a table list object used to interact with DynamoDB tables.
+### Low-level API (red pill)
 
-#### tables.fetch([_cb_])
+All of the [original DynamoDB operations][api] are provided as methods on database instances. You won't need to use them unless you want to sacrifice a clean interdace for more control, and don't mind learning Amazon's JSON format.
 
-Calls back with the tables in the current database, as a list of table instances. This is subject to pagination depending on the number of results, and the number of items in each batch fetched can be specified with an optional leading _limit_ integer.
+See [the wiki][low-api] for more information.
 
-#### tables.forEach([_cb_])
-
-A convenience method that uses the `fetch` method to call back for each table fetched. This abstracts away batching, making it much easier to iterate over tables in a natural yet non-blocking way.
-
-### Table
-
-#### table = new db.Table([options])
-
-Returns a table instance.
-
-```javascript
-recipeTable = new db.Table({
-  name: "recipes",
-  schema: {userId: Number, date: String},
-  throughput: {read: 10, write: 10}
-})
-```
-
-_options_ can be an object with the following properties:
-
-- `name`: The name of the table (required)
-
-- `schema`: The schema of the table (optional), which can be specified as an object, and needs to have either one or two keys. The first key is required and used as the hash key, and the second is option and used as the range key. The values of these keys can be the global `String` and `Number` constructors (or the strings "S" or "N"). All of the following are valid:
-
-```javascript
-{myHashKey: Number}
-{myHashKey: "N"}
-{myHashKey: Number, myRangeKey: String}
-{myHashKey: "N", myRangeKey: "S"}
-```
-
-- `throughput`: The throughput of the table (optional), with `read` and `write` keys.
-
-#### table.create([_cb_])
-
-Creates a table with the schema and throughput as specified in when the table was instantiated. A schema is required for table creation, but the throughput is optional and defaults to the DynamoDB minimums: 3 `ReadCapacityUnits` and 5 `WriteCapacityUnits`.
-
-#### table.fetch([_cb_])
-
-Fetches details about the table, which can include its status, size, schema, and other details, such as the following. The value returned is a table instance, with properties such as the following:
-
-```javascript
-{ 
-  CreationDateTime: Fri, 03 Feb 2012 08:09:12 GMT,
-  ItemCount: 0,
-  KeySchema: {
-    HashKeyElement: { AttributeName: 'user', AttributeType: 'S' },
-    RangeKeyElement: { AttributeName: 'date', AttributeType: 'N' }
-  },
-  ProvisionedThroughput: {
-    LastIncreaseDateTime: Fri, 03 Feb 2012 08:09:12 GMT,
-    ReadCapacityUnits: 3,
-    WriteCapacityUnits: 5
-  },
-  TableName: 'myTable',
-  TableSizeBytes: 0,
-  TableStatus: 'UPDATING'
-}
-```
-
-#### table.destroy([_cb_])
-
-Deletes the table.
-
-#### table.watch([_cb_])
-
-Polls every 5 seconds until the status of the table changes.
-
-### Item, ItemList, etc.
-
-Coming this week! 
-
-<a name="lowlevelapi"></a>
-Low-level API
--------------
-
-If you'd like more control over how you interact with DynamoDB, all [12 original DynamoDB operations][api] are available as camelCased methods on database instances return by `dynamo.createClient()`. These methods are used by the higher-level APIs, and require the object format expected by Amazon.
-
-- `batchGetItem`
-- `createTable`
-- `deleteItem`
-- `deleteTable`
-- `describeTable`
-- `getItem`
-- `listTables`
-- `putItem`
-- `query`
-- `scan`
-- `updateItem`
-- `updateTable`
-
-These allow you to skip dynamo's API sugar and use only its account, session, and authentication logic, for code such as the following for `createTable`:
-
-```javascript
-var dynamo = require("dynamo")
-  , db = dynamo.createClient()
-  , cb = console.log.bind(console)
-
-db.createTable({
-  TableName: "DYNAMO_TEST_TABLE_1",
-
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 5,
-    WriteCapacityUnits: 5
-  },
-
-  KeySchema: {
-    HashKeyElement: {
-      AttributeName: "hash",
-      AttributeType: "S"
-    }
-  }
-}, cb)
-```
-<a name="testing"></a>
 Testing
 -------
 
@@ -222,7 +88,6 @@ If you'd like to run the test stuie with your own credentials, make sure they're
 
 The test suite creates two tables called `DYNAMO_TEST_TABLE_1` and `DYNAMO_TEST_TABLE_2` before the tests are run, and then deletes them once the tests are done. Note that you will need to delete them manually in the event that the tests fail.
 
-<a name="credits"></a>
 Credits
 -------
 
@@ -256,3 +121,6 @@ Send any questions or comments [here][twitter].
 [iam]: http://docs.amazonwebservices.com/IAM/latest/UserGuide/IAM_Introduction.html
 [connect]: http://www.senchalabs.org/connect
 [chriso]: https://github.com/chriso
+[low-api]: https://github.com/jed/dynamo/wiki/Low-level-API
+[high-api]: https://github.com/jed/dynamo/wiki/High-level-API
+[npm]: http://npmjs.org
