@@ -24,10 +24,10 @@ db.get("myTable")
 
 db.query({
   TableName: "myTable",
-  HashKeyValue: {S:"123"},
+  HashKeyValue: {S: "123"},
   RangeKeyValue: {
     ComparisonOperator: "LE",
-    AttributeValueList: [{"N":"1329912311806"}]
+    AttributeValueList: [{N: "1329912311806"}]
   },
   AttributesToGet: ["id", "date", "name"],
   ScanIndexForward: false
