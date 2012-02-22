@@ -65,13 +65,13 @@ If neither of the above are provided, an error will be thrown.
 
 Once you have a database instance, you can use either of the provided APIs:
 
-### High-level API (blue pill)
+### [High-level API][high-api] (blue pill)
 
 The primary purpose of this library is to abstract away the often bizzare API design decisions of DynamoDB, into a composable and intuitive interface based on Database, Table, Item, Batch, Query, and Scan objects.
 
 See [the wiki][high-api] for more information.
 
-### Low-level API (red pill)
+### [Low-level API][low-api] (red pill)
 
 All of the [original DynamoDB operations][api] are provided as methods on database instances. You won't need to use them unless you want to sacrifice a clean interdace for more control, and don't mind learning Amazon's JSON format.
 
