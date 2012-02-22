@@ -15,7 +15,7 @@ Example
 // High-level API
 
 db.get("myTable")
-  .query({id: "123", date: {">=", new Date - 6000 }})
+  .query({id: "123", date: {">=": new Date - 6000 }})
   .get(["id", "date", "name"])
   .reverse()
   .fetch(function(err, data){ ... })
