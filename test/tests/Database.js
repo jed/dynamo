@@ -6,8 +6,8 @@ describe("Database", function() {
   describe("#get()", function() {
     it("should return the appropriate object", function() {
       var table = db.get("table")
-  , batch = db.get(function(){})
-  , item = db.get("table", {id: 123})
+        , batch = db.get(function(){})
+        , item = db.get("table", {id: 123})
 
       table.should.have.property("TableName", "table")
       table.should.have.property("database", db)
