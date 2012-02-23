@@ -6,8 +6,8 @@ describe("Database", function() {
   describe("#get()", function() {
     it("should return the appropriate object", function() {
       var table = db.get("table")
-	, batch = db.get(function(){})
-	, item = db.get("table", {id: 123})
+  , batch = db.get(function(){})
+  , item = db.get("table", {id: 123})
 
       table.should.have.property("TableName", "table")
       table.should.have.property("database", db)
@@ -43,16 +43,16 @@ describe("Database", function() {
   describe("#fetch()", function() {
     it("should return a hash of tables", function(done) {
       db.fetch(function(err, database) {
-	should.not.exist(err)
-	should.exist(database)
-	database.should.equal(db)
+        should.not.exist(err)
+        should.exist(database)
+        database.should.equal(db)
 
-	database.should.have.property("tables")
+        database.should.have.property("tables")
 
-	database.tables.should.have.property("DYNAMO_TEST_TABLE_1")
-	database.tables.should.have.property("DYNAMO_TEST_TABLE_2")
+        database.tables.should.have.property("DYNAMO_TEST_TABLE_1")
+        database.tables.should.have.property("DYNAMO_TEST_TABLE_2")
 
-	done()
+        done()
       })
     })
   })
