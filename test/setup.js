@@ -100,11 +100,10 @@ describe("setup -", function() {
 
   it("fill up DYNAMO_TEST_TABLE_2", function(done) {
     var table = db.get("DYNAMO_TEST_TABLE_2")
-      , names = Object.keys(process.env)
-      , items = names.map(function(name, i) {
+      , arr = Array(50).join().split(",")
+      , items = arr.map(function(___, i) {
           return {
             id: String(i % 3),
-            name: name,
             date: new Date - 3600000 * i,
             count: 0 | Math.random() * 100
           }
