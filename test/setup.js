@@ -78,7 +78,7 @@ describe("setup -", function() {
 
   it("fill up DYNAMO_TEST_TABLE_1", function(done) {
     var table = db.get("DYNAMO_TEST_TABLE_1")
-      , names = ["John", "Paul", "Ringo", "George"]
+      , names = ["John", "Paul", "林檎", "George"]
       , users = names.map(function(name, id) {
           return {
             id: String(id),
