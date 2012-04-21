@@ -19,4 +19,17 @@ describe("Item", function() {
       })
     })
   })
+
+  describe("#destroy", function() {
+    it("should delete the item", function(done) {
+      var item = db.get("DYNAMO_TEST_TABLE_1").get({id: "0"})
+
+      item.destroy(function(err, data) {
+        should.not.exist(err)
+
+        done()
+      })
+    })
+  })
+
 })
