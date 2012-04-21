@@ -100,7 +100,7 @@ describe("setup -", function() {
 
   it("fill up DYNAMO_TEST_TABLE_2", function(done) {
     var table = db.get("DYNAMO_TEST_TABLE_2")
-      , arr = Array(50).join().split(",")
+      , arr = Array(10).join().split(",")
       , items = arr.map(function(___, i) {
           return {
             id: String(i % 3),
