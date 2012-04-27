@@ -5,7 +5,7 @@ dynamo
 
 This is a [node.js][node] binding for the [DynamoDB][dynamo] service provided by [Amazon Web Services][aws]. It aims to abstract DynamoDB's implementation (request signing, session tokens, pagination), but not its tradeoffs/philosophy, by providing two APIs:
 
-- a [low-level-but-ugly API][low-api] that supports all 12 DynamoDB operations as-is, and
+- a [low-level-but-ugly API][low-api] that supports all 13 DynamoDB operations as-is, and
 - a [high-level API][high-api] that uses the above to provide a more natural interface.
 
 Example
