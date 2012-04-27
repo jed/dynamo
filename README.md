@@ -12,10 +12,11 @@ Example
 -------
 
 ```javascript
-// High-level API
 var dynamo = require("dynamo")
   , client = dynamo.createClient()
   , db = client.get("us-east-1")
+
+// High-level API
 
 db.get("myTable")
   .query({id: "123", date: {">=": new Date - 6000 }})
@@ -24,9 +25,6 @@ db.get("myTable")
   .fetch(function(err, data){ ... })
 
 // Same call, using low-level API
-var dynamo = require("dynamo")
-  , client = dynamo.createClient()
-  , db = client.get("us-east-1")
 
 db.query({
   TableName: "myTable",
