@@ -1,6 +1,7 @@
 var should = require("should")
   , dynamo = require("../../")
-  , db = dynamo.createClient()
+  , client = dynamo.createClient()
+  , db = client.get("us-east-1")
 
 describe("Database", function() {
   describe("#get()", function() {

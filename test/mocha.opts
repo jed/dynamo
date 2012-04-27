@@ -1,3 +1,2 @@
 --bail
---reporter dot
 --timeout 100s

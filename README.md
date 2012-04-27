@@ -13,6 +13,9 @@ Example
 
 ```javascript
 // High-level API
+var dynamo = require("dynamo")
+  , client = dynamo.createClient()
+  , db = client.get("us-east-1")
 
 db.get("myTable")
   .query({id: "123", date: {">=": new Date - 6000 }})
@@ -21,6 +24,9 @@ db.get("myTable")
   .fetch(function(err, data){ ... })
 
 // Same call, using low-level API
+var dynamo = require("dynamo")
+  , client = dynamo.createClient()
+  , db = client.get("us-east-1")
 
 db.query({
   TableName: "myTable",
@@ -48,12 +54,12 @@ API
 
 This module exposes the `createClient` method, which is the preferred way to interact with dynamo.
 
-### db = dynamo.createClient([_credentials_])
+### client = dynamo.createClient([_credentials_])
 
-Returns a database instance attached to the account specified by the given credentials. The credentials can be specified as an object with `accessKeyId` and `secretAccessKey` members such as the following:
+Returns a client instance attached to the account specified by the given credentials. The credentials can be specified as an object with `accessKeyId` and `secretAccessKey` members such as the following:
 
 ```javascript
-db = dynamo.createClient({
+client = dynamo.createClient({
   accessKeyId: "...",    // your access key id
   secretAccessKey: "..." // your secret access key
 })
@@ -62,6 +68,17 @@ db = dynamo.createClient({
 You can also omit these credentials by storing them in the environment under which the current process is running, as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 If neither of the above are provided, an error will be thrown.
+
+### db = client.get(_regionName_)
+
+Returns a database in the selected region. Currently, DynamoDB supports the following regions:
+
+- `us-east-1`
+- `us-west-1`
+- `us-west-2`
+- `ap-northeast-1`
+- `ap-southeast-1`
+- `eu-west-1`
 
 Once you have a database instance, you can use either of the provided APIs:
 
