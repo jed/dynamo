@@ -1,12 +1,13 @@
 var should = require("should")
   , dynamo = require("../")
-  , db = dynamo.createClient()
+  , client = dynamo.createClient()
+  , db = client.get("us-east-1")
 
 describe("teardown -", function() {
   it("delete existing test tables", function(done) {
     db.remove("DYNAMO_TEST_TABLE_1", function() {
       db.remove("DYNAMO_TEST_TABLE_2", function() {
-	done()
+        done()
       })
     })
   })
@@ -14,7 +15,7 @@ describe("teardown -", function() {
   it("make sure no test tables exist", function(done) {
     db.get("DYNAMO_TEST_TABLE_1").watch(function() {
       db.get("DYNAMO_TEST_TABLE_2").watch(function() {
-	done()
+        done()
       })
     })
   })

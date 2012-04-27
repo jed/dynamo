@@ -1,6 +1,7 @@
 var should = require("should")
   , dynamo = require("../")
-  , db = dynamo.createClient()
+  , client = dynamo.createClient()
+  , db = client.get("us-east-1")
 
 describe("setup -", function() {
   it("delete existing test tables", function(done) {
