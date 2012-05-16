@@ -4,6 +4,7 @@ var should = require("should")
   , db = client.get("us-east-1")
 
 describe("setup -", function() {
+  
   it("delete existing test tables", function(done) {
     db.remove("DYNAMO_TEST_TABLE_1", function() {
       db.remove("DYNAMO_TEST_TABLE_2", function() {
@@ -101,7 +102,7 @@ describe("setup -", function() {
 
   it("fill up DYNAMO_TEST_TABLE_2", function(done) {
     var table = db.get("DYNAMO_TEST_TABLE_2")
-      , arr = Array(10).join().split(",")
+      , arr = Array(25).join().split(",")
       , items = arr.map(function(___, i) {
           return {
             id: String(i % 3),
@@ -114,7 +115,6 @@ describe("setup -", function() {
       if (err) return done(err)
 
       var item = items.shift()
-
       item ? table.put(item, loop).save(loop) : done()
     }()
   })
