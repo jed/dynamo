@@ -81,7 +81,6 @@ describe("Table", function() {
         .fetch(function(err, items) {
           should.not.exist(err)
           should.exist(items)
-          console.log(items);
           items.length.should.equal( _count )
           last = items[ _count - 1 ]
           pre_last = items[ _count - 2 ]
@@ -99,7 +98,6 @@ describe("Table", function() {
         .limit( _count )
         .cursor( { id: pre_last.id, date: pre_last.date } )
         .fetch(function(err, items) {
-        	console.log(items);
           should.not.exist(err)
           should.exist(items)
           var predicted_first = items[ 0 ]
