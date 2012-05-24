@@ -88,7 +88,7 @@ describe("Table", function() {
         })
     })
 
-    it("should return the next 3 by cursor", function(done) {
+    it("should return the next 3 by `startAt`", function(done) {
       var _count = 3
       db.get("DYNAMO_TEST_TABLE_2")
         .query({
@@ -96,7 +96,7 @@ describe("Table", function() {
           date: {">": 0}
         })
         .limit( _count )
-        .cursor( { id: pre_last.id, date: pre_last.date } )
+        .startAt( { id: pre_last.id, date: pre_last.date } )
         .fetch(function(err, items) {
           should.not.exist(err)
           should.exist(items)
