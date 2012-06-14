@@ -44,6 +44,10 @@ describe("Table", function() {
   })
 
   describe("#query", function() {
+
+  	var last = null
+  	var pre_last = null
+
     it("should return matching items", function(done) {
       db.get("DYNAMO_TEST_TABLE_2")
         .query({
@@ -65,6 +69,48 @@ describe("Table", function() {
           done()
         })
     })
+
+    it("should return only 3 items", function(done) {
+      var _count = 3
+      db.get("DYNAMO_TEST_TABLE_2")
+        .query({
+          id: "2",
+          date: {">": 0}
+        })
+        .limit( _count )
+        .fetch(function(err, items) {
+          should.not.exist(err)
+          should.exist(items)
+          items.length.should.equal( _count )
+          last = items[ _count - 1 ]
+          pre_last = items[ _count - 2 ]
+          done()
+        })
+    })
+
+    it("should return the next 3 by `startAt`", function(done) {
+      var _count = 3
+      db.get("DYNAMO_TEST_TABLE_2")
+        .query({
+          id: "2",
+          date: {">": 0}
+        })
+        .limit( _count )
+        .startAt( { id: pre_last.id, date: pre_last.date } )
+        .fetch(function(err, items) {
+          should.not.exist(err)
+          should.exist(items)
+          var predicted_first = items[ 0 ]
+          // the current first has to be the last of the preceding test
+          predicted_first.should.eql( last )
+
+          items.length.should.equal( _count )
+          last = items[ _count - 1 ]
+          pre_last = items[ _count - 2 ]
+          done()
+        })
+    })
+
   })
 
 })
