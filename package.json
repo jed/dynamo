@@ -16,7 +16,7 @@
     "nosql",
     "database"
   ],
-  "main": "./lib",
+  "main": "./dynamo",
   "scripts": {
     "pretest": "mocha ./test/setup.js",
     "test": "mocha ./test/tests/*",
