@@ -3,4 +3,5 @@ node_js:
   - 0.6
   - 0.8
 env:
-  - secure: "VqlTEk60crfJFzo0SzgxwPovL4tRkHQqo6F1VJEcNp7rbqhJ42kH5iKNs14v\n+VQgI3Cjb1n1kU9uVBSMizWZ6xqJsxmWIzwP4UKMnT1cZN9srLqJXQTRCDuk\n3dGm0MU1TMn7bh9Rn7N03IdhuQgHva0uBrYGIR78C7M+txQq3cE="
+  global:
+    - secure: "VqlTEk60crfJFzo0SzgxwPovL4tRkHQqo6F1VJEcNp7rbqhJ42kH5iKNs14v\n+VQgI3Cjb1n1kU9uVBSMizWZ6xqJsxmWIzwP4UKMnT1cZN9srLqJXQTRCDuk\n3dGm0MU1TMn7bh9Rn7N03IdhuQgHva0uBrYGIR78C7M+txQq3cE="
