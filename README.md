@@ -101,7 +101,7 @@ If you'd like to run the test stuie with your own credentials, make sure they're
 
     npm test
 
-The test suite creates two tables called `DYNAMO_TEST_TABLE_1` and `DYNAMO_TEST_TABLE_2` before the tests are run, and then deletes them once the tests are done. Note that you will need to delete them manually in the event that the tests fail.
+The test suite creates three tables called `DYNAMO_TEST_TABLE_1`, `DYNAMO_TEST_TABLE_2`, and 'DYNAMO_TEST_TABLE_3` before the tests are run, and then deletes them once the tests are done. Note that you will need to delete them manually in the event that the tests fail.
 
 To do
 -----
