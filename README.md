@@ -1,5 +1,9 @@
+# This library has been deprecated.
+
+Please use [Amazon's SDK for node.js](http://aws.amazon.com/sdkfornodejs/) instead.
+
 dynamo
-======
+------
 
 [![Build Status](https://secure.travis-ci.org/jed/dynamo.png)][travis]
 
