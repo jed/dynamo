@@ -29,6 +29,8 @@
     "mocha": "*",
     "should": "*"
   },
-  "dependencies": {},
+  "dependencies": {
+    "type-detect": "1.0.x"
+  },
   "optionalDependencies": {}
 }
